@@ -1,33 +1,23 @@
 # VLSI-LAB-EXPERIMENTS
 # AIM: 
-To simulate and synthesis Logic Gates,Adders and Subtractor using Xilinx ISE.
-
+To simulate and synthesis ENCODER, DECODER, MULTIPLEXER, DEMULTIPLEXER, MAGNITUDE COMPARATOR using vivado.
 # APPARATUS REQUIRED: 
-Xilinx 14.7 Spartan6 FPGA
+vivado 2023.2.
 
 # PROCEDURE:
-STEP:1 Start the Xilinx navigator, Select and Name the New project. 
+STEP:1 Start the vivado software, Select and Name the New project.
 
 STEP:2 Select the device family, device, package and speed.
 
-STEP:3 Select new source in the New Project and select Verilog Module as the Source type. 
+STEP:3 Select new source in the New Project and select Verilog Module as the Source type.
 
-STEP:4 Type the File Name and Click Next and then finish button. Type the code and save it. 
+STEP:4 Type the File Name and module name and Click Next and then finish button. Type the code and save it.
 
-STEP:5 Select the Behavioral Simulation in the Source Window and click the check syntax.
+STEP:5 Select the run simulation and then run Behavioral Simulation in the Source Window and click the check syntax.
 
-STEP:6 Click the simulation to simulate the program and give the inputs and verify the outputs as per the truth table. 
+STEP:6 Click the simulation to simulate the program and give the inputs and verify the outputs as per the truth table.
 
-STEP:7 Select the Implementation in the Sources Window and select the required file in the Processes Window. 
-
-STEP:8 Select Check Syntax from the Synthesize XST Process. Double Click in the Floorplan Area/IO/Logic-Post Synthesis process in the User Constraints process group. UCF(User constraint File) is obtained.
-
-STEP:9 In the Design Object List Window, enter the pin location for each pin in the Loc column Select save from the File menu. 
-
-STEP:10 Double click on the Implement Design and double click on the Generate Programming File to create a bitstream of the design.(.v) file is converted into .bit file here. 
-
-STEP:11 Load the Bit file into the SPARTAN 6 FPGA STEP:11 On the board, by giving required input, the LEDs starts to glow light, indicating the output.
-
+STEP:7 compare the output with truth table.
 
 # Logic Diagram :
 
@@ -65,170 +55,208 @@ STEP:11 Load the Bit file into the SPARTAN 6 FPGA STEP:11 On the board, by givin
 
 # VERILOG CODE:
 
-module logic(a,b,andgate,orgate,xorgate,nandgate,norgate,xnorgate,notgate );
+# 8-3 ENCODER:
 
-input a,b;
+module encoder(d,a,b,c);
 
-output andgate,orgate,xorgate,nandgate,norgate,xnorgate,notgate;
+input [7:0]d; output a,b,c;
 
-and(andgate,a,b);
+or (a,d[4],d[5],d[6],d[7]);
 
-or(orgate,a,b);
+or (b,d[2],d[3],d[6],d[7]);
 
-xor(xorgate,a,b);
-
-nand(nandgate,a,b);
-
-nor(norgate,a,b);
-
-xnor(xnorgate,a,b);
-
-not(notgate,a);
+or (c,d[1],d[3],d[5],d[7]);
 
 endmodule
 
-# HALF ADDER:
+# 3-8 DECODER:
 
-module HalfAdder(a,b,sum,carry);
+module decoder(A,E,Y);
 
-input a,b;
+input [1:0]A;
 
-output sum,carry;
+input E;
 
-xor (sum,a,b);
+output [3:0]Y;
 
-and (carry,a,b);
+assign Y[0]=~A[1]&~A[0]&E;
+
+assign Y[1]=~A[1]&A[0]&E;
+
+assign Y[2]=A[1]&~A[0]&E;
+
+assign Y[3]=A[1]&A[0]&E;
 
 endmodule
 
-# FULL ADDER:
+module decoder(A,Y);
 
-module FA(a,b,cin,sum,cout);
+input[2:0]A;
 
-input a,b,cin;
+output[7:0]Y;
 
-output sum,cout;
+decoder_2_4 d1(A[1:0],~A[2],Y[3:0]);
+
+decoder_2_4 d2(A[1:0],~A[2],Y[7:4]);
+
+endmodule
+
+# 8-1 MULTIPLEXER:
+
+module multi(i,s,y);
+
+input[7:0]i;
+
+input[2:0]s;
+
+output reg y;
+
+always@(*)
+
+begin
+
+case({s[2],s[1],s[0]})
+
+3'b000:y=i[0];
+
+3'b001:y=i[1];
+
+3'b010:y=i[2];
+
+3'b011:y=i[3];
+
+3'b100:y=i[4];
+
+3'b101:y=i[5];
+
+3'b110:y=i[6];
+
+3'b111:y=i[7];
+
+endcase
+
+end
+
+endmodule
+
+# 1-8 DEMULTIPLEXER:
+
+module demultiplexer(d1,d2,d3,d4,d5,d6,d7,d8,i,s0,s1,s2);
+
+input i,s0,s1,s2;
+
+output d1,d2,d3,d4,d5,d6,d7,d8;
 
 wire w1,w2,w3;
 
-xor g1(w1,a,b);
+not g1(w1,s0);
 
-and g2(w2,w1,cin);
+not g2(w2,s1);
 
-and g3(w3,a,b);
+not g3(w3,s2);
 
-xor g4(sum,w1,cin);
+and g4(d1,w1,w2,w3,i);
 
-or g5(cout,w2,w3);
+and g5(d2,w1,w2,s2,i);
 
-endmodule
+and g6(d3,w1,s1,w3,i);
 
-# HALF SUBTRACTOR:
+and g7(d4,w1,s1,s2,i);
 
-module halfsubtractor(a,b,diff,borrow);
+and g8(d5,s0,w2,w3,i);
 
-input a,b;
+and g9(d6,s0,w2,s2,i);
 
-output diff,borrow;
+and g10(d7,s0,s1,w3,i);
 
-xor g1(diff,a,b);
-
-and g2(borrow,~a,b);
+and g11(d8,s0,s1,s2,i);
 
 endmodule
 
-# FULL SUBTRACTOR:
+# 2 BIT MAGNITUDE COMPARATOR :
 
-module full_sub(a,b,bin,diff,borrow);
+module mag_com(a,b,gt,it,eq);
 
-input a,b,bin;
+input [3:0]a,b;
 
-output diff,borrow;
+output reg gt,it,eq;
 
-wire w1,w2,w3;
+always @(a,b)
 
-xor g1(w1,a,bin);
+begin
 
-and g2(w2,~a,b);
+if(a>b)
 
-xor g3(diff,w1,bin);
+begin
 
-or g4(borrow,w2,w3);
+gt = 1'b1;
 
-and g5(w3,~w1,bin);
+it = 1'b0;
 
-endmodule
+eq = 1'b0;
 
-# 8 BIT RIPPLE CARRY ADDER:
+end
 
-module fa(a,b,c,sum,carry);
+else if(a<b)
 
-input a,b,c;
+begin
 
-output sum,carry;
+gt = 1'b0;
 
-assign sum = a^b^c;
+it = 1'b1;
 
-assign carry=(a&b)|(b&c)|(c&a);
+eq = 1'b0;
 
-endmodule
+end
 
-module rca(a,b,cin,sum,cout);
+else
 
-input [7:0]a,b;
+begin
 
-input cin;
+gt = 1'b0;
 
-output [7:0]sum;
+it = 1'b0;
 
-output cout;
+eq = 1'b1;
 
-wire c1,c2,c3,c4,c5,c6,c7;
+end
 
-fa fa1(a[0],b[0],cin,sum[0],c1);
-
-fa fa2(a[1],b[1],c1,sum[1],c2);
-
-fa fa3(a[2],b[2],c2,sum[2],c3);
-
-fa fa4(a[3],b[3],c3,sum[3],c4);
-
-fa fa5(a[4],b[4],c4,sum[4],c5);
-
-fa fa6(a[5],b[5],c5,sum[5],c6);
-
-fa fa7(a[6],b[6],c6,sum[6],c7);
-
-fa fa8(a[7],b[7],c7,sum[7],cout);
+end
 
 endmodule
 
-# OUTPUT:
-# LOGIC GATES:
-![318467869-6695f451-5dcf-4a42-84fc-c6f66f9237f2](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/50f9d353-cfb5-48ff-b982-3c9c82d99b71)
+# OUTPUT WAVEFORM:
 
+# ENCODER:
 
-# HALF ADDER:
-![318468197-c399e5c5-b675-4545-9e41-39f297c2cb86](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/59208685-b72b-4cf8-84c5-b6d07d728448)
+![image](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/d4492e1d-a2c5-4f4f-abc6-727eefc90c73)
 
+# DECODER:
 
-# FULL ADDER:
-![318468444-740bb786-d700-4bae-b7d8-a34cb7227d5b](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/1dfdea2c-ddec-46c0-aac5-5e310cd61398)
+![image](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/e762b5e8-3c74-4d7d-a0f5-9d79203c2eb8)
 
+# MULTIPLEXER:
 
-# HALF SUBTRACTOR:
-![318468590-f84e1b77-76d3-4ebb-9664-f1796a74b47d](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/34e571b8-0f1e-4b60-a917-fa9aefd187ff)
+![image](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/aef7a3c2-2168-454c-a084-f67cb1e28e22)
 
+# DEMULTIPLEXER:
 
-# FULL SUBTRACTOR:
-![318468662-91d2bc36-c334-4a95-ab00-292baa0d50ab](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/43dfbb42-7d0b-4800-9e33-539eb98c1788)
+![image](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/c7e5c013-4186-413b-be66-1ad909848af8)
 
+# 2 BIT MAGNITUDE COMPARATOR:
 
-# 8 BIT RIPPLE CARRY ADDER:
-![318468805-05b86375-6110-4a13-b66a-1211f92633b2](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/7121dd2c-628d-4d33-87b2-79152ec4aa30)
-
+![image](https://github.com/Bharathchows18/VLSI-LAB-EXP-1/assets/161430676/acd32192-c381-4612-bf0f-7598e7973fda
 
 # RESULT:
-Thus the simulation and synthesis of Logic Gates,Adders and Subtractors using vivado has been sucessfully executed and verified .
-RESULT:
+
+Thus the simulation and synthesis of ENCODER, DECODER, MULTIPLEXER, DEMULTIPLEXER, 2bit MAGNITUDE COMPARATOR using vivado is successfully completed and executed.
+
+
+
+
+
+
+
+
+
 
