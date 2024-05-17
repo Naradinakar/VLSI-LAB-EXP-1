@@ -25,6 +25,7 @@ STEP:6 Click “run simulation” in the navigator window and click “Run behav
 STEP:7 Verify the output in the simulation window.
 
 LOGIC GATES LOGIC DIAGRAM:
+
 ![301405876-ee17970c-3ac9-4603-881b-88e2825f41a4](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/35b01533-4316-40e9-9544-037d0a6540ad)
 
  VERILOG CODE
@@ -47,6 +48,7 @@ OUTPUT WAVEFORM
 
 
 HALF ADDER LOGIC DIAGRAM
+
 ![328456195-8dbaa111-3916-4e39-bd03-852cd2d76982](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/79e1b294-5e5e-4570-9e3d-b55a0946e12d)
 
 
@@ -65,9 +67,11 @@ and g2(carry,a,b);
 endmodule
 ```
 OUTPUT WAVEFORM
+
 ![328456731-d325278a-9829-4e71-b638-70f7285a1dcd](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/c5dd617b-ff97-4474-95b2-c05936b0024e)
 
 FULL ADDER LOGIC DIAGRAM
+
 ![328457240-8713d8b5-e4b6-4c9d-a00b-41eae22c9a2c](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/e6e68dc7-b4b2-4c35-875c-ab20ba5c78aa)
 
 VERILOG CODE
@@ -98,6 +102,7 @@ OUTPUT WAVEFORM
 
 
 HALF SUBTRACTOR LOGIC DIAGRAM
+
 ![328457975-a2ece9c5-3ea5-4656-ac14-51ae2f150460](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/d8174bdc-0cd8-4bbb-b72d-fa35d7ee117d)
 
 
@@ -117,9 +122,11 @@ and(borrow,~a,b);
 endmodule
 ```
 OUTPUT WAVEFORM
+
 ![328458425-4bdf087c-428c-4822-bc46-c5e7dd254033](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/ee8a87d1-94e6-40bb-88f3-7c2ef608e895)
 
 FULL SUBTRACTOR LOGIC DIAGRAM
+
 ![328458649-1b5c2122-0560-4d64-8eca-093cc6a727ec](https://github.com/Naradinakar/VLSI-LAB-EXP-1/assets/161109578/26ff67e7-4270-4924-a914-866e89a2f29d)
 
 VERILOG CODE
